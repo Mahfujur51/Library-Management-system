@@ -10,12 +10,13 @@ else{
 if(isset($_GET['del']))
 {
 $id=$_GET['del'];
-$sql = "delete from tblbooks  WHERE id=:id";
-$query = $dbh->prepare($sql);
-$query -> bindParam(':id',$id, PDO::PARAM_STR);
-$query -> execute();
-$_SESSION['delmsg']="Category deleted scuccessfully ";
+$sql = "DELETE FROM tbl_book WHERE id='$id'";
+$query=mysqli_query($con,$sql);
+if ($query) {
+   $_SESSION['delmsg']="Category deleted scuccessfully ";
 header('location:manage-books.php');
+
+}
 
 }
 
@@ -121,29 +122,32 @@ header('location:manage-books.php');
                                         </tr>
                                     </thead>
                                     <tbody>
-<?php $sql = "SELECT tblbooks.BookName,tblcategory.CategoryName,tblauthors.AuthorName,tblbooks.ISBNNumber,tblbooks.BookPrice,tblbooks.id as bookid from  tblbooks join tblcategory on tblcategory.id=tblbooks.CatId join tblauthors on tblauthors.id=tblbooks.AuthorId";
-$query = $dbh -> prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{               ?>                                      
+<?php 
+
+
+$sql="SELECT tbl_book.bookname,tbl_catagory.catname,tbl_author.authorname,tbl_book.isbnnumber,tbl_book.bookprice,tbl_book.id as bookid FROM tbl_book JOIN tbl_catagory on tbl_catagory.id=tbl_book.catid JOIN tbl_author on tbl_author.id=tbl_book.authorid";
+$query=mysqli_query($con,$sql);
+$num=mysqli_num_rows($query);
+if ($num>0) {
+    $cont=1;
+    while ($result=mysqli_fetch_array($query)) {
+
+
+            ?>                                      
                                         <tr class="odd gradeX">
-                                            <td class="center"><?php echo htmlentities($cnt);?></td>
-                                            <td class="center"><?php echo htmlentities($result->BookName);?></td>
-                                            <td class="center"><?php echo htmlentities($result->CategoryName);?></td>
-                                            <td class="center"><?php echo htmlentities($result->AuthorName);?></td>
-                                            <td class="center"><?php echo htmlentities($result->ISBNNumber);?></td>
-                                            <td class="center"><?php echo htmlentities($result->BookPrice);?></td>
+                                            <td class="center"><?php echo htmlentities($cont);?></td>
+                                            <td class="center"><?php echo htmlentities($result['bookname']);?></td>
+                                            <td class="center"><?php echo htmlentities($result['catname']);?></td>
+                                            <td class="center"><?php echo htmlentities($result['authorname']);?></td>
+                                            <td class="center"><?php echo htmlentities($result['isbnnumber']);?></td>
+                                            <td class="center"><?php echo htmlentities($result['bookprice']);?></td>
                                             <td class="center">
 
-                                            <a href="edit-book.php?bookid=<?php echo htmlentities($result->bookid);?>"><button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button> 
-                                          <a href="manage-books.php?del=<?php echo htmlentities($result->bookid);?>" onclick="return confirm('Are you sure you want to delete?');"" >  <button class="btn btn-danger"><i class="fa fa-pencil"></i> Delete</button>
+                                            <a href="edit-book.php?bookid=<?php echo htmlentities($result['bookid']);?>"><button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button> 
+                                          <a href="manage-books.php?del=<?php echo htmlentities($result['bookid']);?>" onclick="return confirm('Are you sure you want to delete?');"" >  <button class="btn btn-danger"><i class="fa fa-pencil"></i> Delete</button>
                                             </td>
                                         </tr>
- <?php $cnt=$cnt+1;}} ?>                                      
+ <?php $cont++;}} ?>                                      
                                     </tbody>
                                 </table>
                             </div>
