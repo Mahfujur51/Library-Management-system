@@ -75,35 +75,36 @@ header('location:manage-books.php');
                                     </thead>
                                     <tbody>
 <?php 
-$sid=$_SESSION['stdid'];
-$sql="SELECT tblbooks.BookName,tblbooks.ISBNNumber,tblissuedbookdetails.IssuesDate,tblissuedbookdetails.ReturnDate,tblissuedbookdetails.id as rid,tblissuedbookdetails.fine from  tblissuedbookdetails join tblstudents on tblstudents.StudentId=tblissuedbookdetails.StudentId join tblbooks on tblbooks.id=tblissuedbookdetails.BookId where tblstudents.StudentId=:sid order by tblissuedbookdetails.id desc";
-$query = $dbh -> prepare($sql);
-$query-> bindParam(':sid', $sid, PDO::PARAM_STR);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{               ?>                                      
+$sid=$_SESSION['stuid'];
+$sql="SELECT tbl_student.fullname,tbl_book.bookname,tbl_book.isbnnumber,tbl_issu.issudate,tbl_issu.returndate,tbl_issu.fine,tbl_issu.returnstatus,tbl_issu.id as rid from  tbl_issu join tbl_student on tbl_student.studentid=tbl_issu.studentid join tbl_book on tbl_book.id=tbl_issu.bookid WHERE tbl_issu.studentid='$sid' ";
+$query=mysqli_query($con,$sql);
+$num=mysqli_num_rows($query);
+if ($num>0) {
+    $cont=1;
+    while ($result=mysqli_fetch_array($query)) {
+        # code...
+
+
+
+?>                                      
                                         <tr class="odd gradeX">
-                                            <td class="center"><?php echo htmlentities($cnt);?></td>
-                                            <td class="center"><?php echo htmlentities($result->BookName);?></td>
-                                            <td class="center"><?php echo htmlentities($result->ISBNNumber);?></td>
-                                            <td class="center"><?php echo htmlentities($result->IssuesDate);?></td>
-                                            <td class="center"><?php if($result->ReturnDate=="")
+                                            <td class="center"><?php echo htmlentities($cont);?></td>
+                                            <td class="center"><?php echo htmlentities($result['bookname']);?></td>
+                                            <td class="center"><?php echo htmlentities($result['isbnnumber']);?></td>
+                                            <td class="center"><?php echo htmlentities($result['issudate']);?></td>
+                                            <td class="center"><?php if($result['returnstatus']=='0')
                                             {?>
                                             <span style="color:red">
                                              <?php   echo htmlentities("Not Return Yet"); ?>
                                                 </span>
                                             <?php } else {
-                                            echo htmlentities($result->ReturnDate);
+                                            echo htmlentities($result['returndate']);
                                         }
                                             ?></td>
-                                              <td class="center"><?php echo htmlentities($result->fine);?></td>
+                                              <td class="center"><?php echo htmlentities($result['fine']);?></td>
                                          
                                         </tr>
- <?php $cnt=$cnt+1;}} ?>                                      
+ <?php $cont++;}} ?>                                      
                                     </tbody>
                                 </table>
                             </div>

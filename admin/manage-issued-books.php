@@ -102,7 +102,7 @@ else{
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $sql = "SELECT tbl_student.fullname,tbl_book.bookname,tbl_book.isbnnumber,tbl_issu.issudate,tbl_issu.returndate,tbl_issu.id as rid from  tbl_issu join tbl_student on tbl_student.studentid=tbl_issu.studentid join tbl_book on tbl_book.id=tbl_issu.bookid order by tbl_issu.id desc";
+                        <?php $sql = "SELECT tbl_student.fullname,tbl_book.bookname,tbl_book.isbnnumber,tbl_issu.issudate,tbl_issu.returndate,tbl_issu.returnstatus,tbl_issu.id as rid from  tbl_issu join tbl_student on tbl_student.studentid=tbl_issu.studentid join tbl_book on tbl_book.id=tbl_issu.bookid order by tbl_issu.id desc";
                         $query=mysqli_query($con,$sql);
                         $num=mysqli_num_rows($query);
                         if ($num>0) {
@@ -114,7 +114,7 @@ else{
                                         <td class="center"><?php echo htmlentities($result['bookname']);?></td>
                                         <td class="center"><?php echo htmlentities($result['isbnnumber']);?></td>
                                         <td class="center"><?php echo htmlentities($result['issudate']);?></td>
-                                        <td class="center"><?php if($result['returndate']=='')
+                                        <td class="center"><?php if($result['returnstatus']=='')
                                         {
                                             echo htmlentities("Not Return Yet");
                                         } else {
