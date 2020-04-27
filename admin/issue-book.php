@@ -11,15 +11,10 @@ else{
 if(isset($_POST['issue']))
 {
 $studentid=strtoupper($_POST['studentid']);
-$bookid=$_POST['bookdetails'];
-$sql="INSERT INTO  tblissuedbookdetails(StudentID,BookId) VALUES(:studentid,:bookid)";
-$query = $dbh->prepare($sql);
-$query->bindParam(':studentid',$studentid,PDO::PARAM_STR);
-$query->bindParam(':bookid',$bookid,PDO::PARAM_STR);
-$query->execute();
-$lastInsertId = $dbh->lastInsertId();
-if($lastInsertId)
-{
+$bookid=$_POST['bookid'];
+$sql="INSERT INTO  tbl_issu(studentid,bookid) VALUES('$studentid','$bookid')";
+$query=mysqli_query($con,$sql);
+if ($query) {
 $_SESSION['msg']="Book issued successfully";
 header('location:manage-issued-books.php');
 }
@@ -68,7 +63,7 @@ function getbook() {
 $("#loaderIcon").show();
 jQuery.ajax({
 url: "get_book.php",
-data:'bookid='+$("#bookid").val(),
+data:'isbnnumber='+$("#isbnnumber").val(),
 type: "POST",
 success:function(data){
 $("#get_book_name").html(data);
@@ -92,7 +87,7 @@ error:function (){}
       <!------MENU SECTION START-->
 <?php include('includes/header.php');?>
 <!-- MENU SECTION END-->
-    <div class="content-wra
+
     <div class="content-wrapper">
          <div class="container">
         <div class="row pad-botm">
@@ -103,7 +98,7 @@ error:function (){}
 
 </div>
 <div class="row">
-<div class="col-md-10 col-sm-6 col-xs-12 col-md-offset-1"">
+<div class="col-md-10 col-sm-6 col-xs-12 col-md-offset-1">
 <div class="panel panel-info">
 <div class="panel-heading">
 Issue a New Book
@@ -126,12 +121,12 @@ Issue a New Book
 
 <div class="form-group">
 <label>ISBN Number or Book Title<span style="color:red;">*</span></label>
-<input class="form-control" type="text" name="booikid" id="bookid" onBlur="getbook()"  required="required" />
+<input class="form-control" type="text" name="isbnnumber" id="isbnnumber" onBlur="getbook()"  required="required" />
 </div>
 
  <div class="form-group">
 
-  <select  class="form-control" name="bookdetails" id="get_book_name" readonly>
+  <select  class="form-control" name="bookid" id="get_book_name" readonly>
    
  </select>
  </div>
